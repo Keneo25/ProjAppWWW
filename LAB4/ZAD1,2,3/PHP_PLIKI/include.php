@@ -3,9 +3,4 @@
 
 echo 'Tekst z innnego pliku';
 
-
-
-
-
-
 ?>
