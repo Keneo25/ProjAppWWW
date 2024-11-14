@@ -1,5 +1,5 @@
 <div id="jeden" style="display: flex; flex-direction: column; align-items: center; padding: 2rem; gap: 2rem;" onload="startclock()">
-  
+    
     <h1 style="text-align: center;">Jaki jest twój ulubiony kolor budynku?</h1>
     
    
@@ -22,7 +22,7 @@
                style="padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background-color: #FF0000; color: white;">
     </form>
 
-  
+   
     <div style="text-align: center; margin: 2rem 0;">
         <div id="zegarek" style="font-size: 1.5rem; margin-bottom: 1rem;">aaaa</div>
         <div id="data" style="font-size: 1.2rem;"></div>
@@ -30,7 +30,7 @@
 
    
     <div style="position: relative; width: 400px; height: 400px; margin: 2rem auto;">
-      
+        
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
             <p style="font-size: 1.2rem; color: #333;">Animacje</p>
         </div>
@@ -41,19 +41,18 @@
             <p>Wieżowiec w budowie</p>
         </div>
 
-      
         <div id="animacjaTestowa2" class="test-block" 
              style="position: absolute; top: 50%; right: 0; transform: translateY(-50%); width: 150px; height: 100px; background-color: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
             <p>Rozbudowa</p>
         </div>
 
-     
+        
         <div id="animacjaTestowa3" class="test-block" 
              style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 100px; background-color: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
             <p>Zmiana fasady</p>
         </div>
 
-        
+       
         <div id="animacjaTestowa4" class="test-block" 
              style="position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 150px; height: 100px; background-color: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
             <p>Nowy element</p>
@@ -94,6 +93,7 @@
         });
     });
 
+    
     $("#animacjaTestowa4").on("click", function () {
         $(this).animate({
             rotate: '360deg'
