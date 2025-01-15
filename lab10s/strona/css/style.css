@@ -203,61 +203,22 @@ nav a i {
 
 /* Stylizacja formularzy */
 form {
-    background-color: #f9f9f9; /* Jasne tło formularza */
-    border: 1px solid #ccc; /* Szary obramowanie */
-    border-radius: 5px; /* Zaokrąglone rogi */
-    padding: 20px; /* Wewnętrzne odstępy */
-    margin-bottom: 20px; /* Odstęp między formularzami */
+    max-width: 500px; /* Maksymalna szerokość */
+    margin: 2rem auto; /* Margines */
+    padding: 2rem; /* Padding */
+    background-color: #fff; /* Kolor tła */
+    border-radius: 8px; /* Zaokrąglenie rogów */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Cień */
 }
 
-form h2 {
-    margin-top: 0; /* Usunięcie górnego marginesu */
-    color: #333; /* Kolor nagłówka */
-    text-align: center; /* Wyśrodkowanie nagłówka */
-}
-
-input[type="text"],
-input[type="number"],
-input[type="submit"] {
+/* Stylizacja pól formularzy */
+input, textarea {
     width: 100%; /* Szerokość 100% */
-    padding: 10px; /* Wewnętrzne odstępy */
-    margin: 10px 0; /* Odstępy między polami */
-    border: 1px solid #ccc; /* Szary obramowanie */
-    border-radius: 4px; /* Zaokrąglone rogi */
-    box-sizing: border-box; /* Umożliwia dodanie paddingu do szerokości */
-}
-
-input[type="submit"] {
-    background-color: #4CAF50; /* Zielony kolor tła */
-    color: white; /* Biały kolor tekstu */
-    cursor: pointer; /* Kursor wskazujący */
-}
-
-input[type="submit"]:hover {
-    background-color: #45a049; /* Ciemniejszy zielony przy najechaniu */
-}
-
-/* Styl dla listy kategorii */
-ul {
-    list-style-type: none; /* Usunięcie punktów z listy */
-    padding: 0; /* Usunięcie wewnętrznych odstępów */
-}
-
-ul li {
-    padding: 10px; /* Wewnętrzne odstępy dla elementów listy */
-    border: 1px solid #ddd; /* Szare obramowanie */
-    margin: 5px 0; /* Odstępy między elementami listy */
-    border-radius: 4px; /* Zaokrąglone rogi */
-    background-color: #f1f1f1; /* Jasne tło dla elementów listy */
-}
-
-ul li:hover {
-    background-color: #e1e1e1; /* Ciemniejsze tło przy najechaniu */
-}
-
-/* Wyśrodkowanie nagłówków h2 w sekcji wyświetlania kategorii */
-h2 {
-    text-align: center; /* Wyśrodkowanie nagłówka */
+    padding: 0.8rem; /* Padding */
+    margin-bottom: 1rem; /* Margines dolny */
+    border: 1px solid #ddd; /* Ramka */
+    border-radius: 4px; /* Zaokrąglenie rogów */
+    font-size: 1rem; /* Rozmiar czcionki */
 }
 
 /* Stylizacja przycisków */
@@ -747,80 +708,491 @@ img {
     background-color: #45a049; /* Zmiana koloru tła */
 }
 
-/* Kontener dla sekcji zarządzania produktami */
-.products-management {
-    padding: 20px;                /* Wewnętrzny odstęp 20px */
-    margin: 20px 0;              /* Margines górny i dolny 20px, boczne 0 */
+/* Stylizacja drzewa kategorii */
+.categories-tree {
+    margin-top: 30px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Główna tabela produktów */
-.products-table {
-    width: 100%;                 /* Pełna szerokość kontenera */
-    border-collapse: collapse;    /* Łączenie krawędzi komórek tabeli */
-    margin-top: 20px;            /* Górny margines 20px */
+.category-structure {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
 }
 
-/* Style dla komórek i nagłówków tabeli */
-.products-table th,
-.products-table td {
-    padding: 10px;               /* Wewnętrzny odstęp 10px */
-    border: 1px solid #ddd;      /* Szara ramka o grubości 1px */
-    text-align: left;            /* Wyrównanie tekstu do lewej */
+/* Style dla kategorii głównej */
+.category-main {
+    position: relative;
 }
 
-/* Style dla nagłówków tabeli */
-.products-table th {
-    background-color: #f5f5f5;   /* Jasnoszare tło dla nagłówków */
+/* Specjalne style dla kategorii poziomu 0 */
+.level-0 {
+    margin: 0 0 40px 0;
+    padding: 0 0 40px 0;
+    border-bottom: 3px solid #e0e0e0;
 }
 
-/* Kontener formularza produktu */
-.product-form {
-    max-width: 800px;            /* Maksymalna szerokość formularza */
-    margin: 20px auto;           /* Wyśrodkowanie i margines górny/dolny */
-    padding: 20px;               /* Wewnętrzny odstęp 20px */
+.level-0:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
-/* Grupa elementów formularza */
-.form-group {
-    margin-bottom: 15px;         /* Dolny margines między grupami */
+/* Style dla wiersza kategorii */
+.category-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
-/* Style dla etykiet w formularzu */
-.form-group label {
-    display: block;              /* Wyświetlanie jako blok */
-    margin-bottom: 5px;          /* Dolny margines 5px */
+/* Style dla głównej kategorii */
+.main-category {
+    background: #e3f2fd;
+    border-left: 5px solid #2196F3;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* Style dla pól wprowadzania danych */
-.form-group input[type="text"],
-.form-group input[type="number"],
-.form-group textarea,
-.form-group select {
-    width: 100%;                 /* Pełna szerokość kontenera */
-    padding: 8px;                /* Wewnętrzny odstęp 8px */
-    border: 1px solid #ddd;      /* Szara ramka o grubości 1px */
-    border-radius: 4px;          /* Zaokrąglone rogi */
+/* Style dla podkategorii */
+.subcategories {
+    margin-left: 30px;
+    padding-left: 20px;
+    border-left: 2px solid #e9ecef;
 }
 
-/* Podstawowy styl przycisku */
-.btn {
-    display: inline-block;       /* Wyświetlanie jako element liniowy-blokowy */
-    padding: 8px 15px;           /* Wewnętrzny odstęp */
-    background-color: #007bff;   /* Niebieskie tło */
-    color: white;                /* Biały tekst */
-    text-decoration: none;       /* Brak podkreślenia */
-    border-radius: 4px;          /* Zaokrąglone rogi */
-    border: none;                /* Brak ramki */
-    cursor: pointer;             /* Kursor wskaźnika */
+.sub-category {
+    background: #f8f9fa;
+    margin: 10px 0;
+    border: 1px solid #e9ecef;
 }
 
-/* Styl przycisku niebezpiecznych akcji */
-.btn-danger {
-    background-color: #dc3545;   /* Czerwone tło dla przycisków usuwania */
+/* Informacje o kategorii */
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-/* Styl dla małych przycisków */
-.btn-small {
-    padding: 5px 10px;           /* Mniejszy padding */
-    font-size: 0.9em;            /* Mniejsza czcionka */
+.category-icon {
+    font-size: 1.2em;
+    color: #2196F3;
 }
+
+.category-name {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+.category-type {
+    color: #6c757d;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+/* Przyciski akcji */
+.category-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.category-actions .edit-btn,
+.category-actions .delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    color: white;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Style dla przycisku edycji */
+.category-actions .edit-btn {
+    background: #2196F3;
+    box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+    border: 1px solid #1976D2;
+}
+
+.category-actions .edit-btn::before {
+    content: "✎";
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+.category-actions .edit-btn:hover {
+    background: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4);
+}
+
+/* Style dla przycisku usuwania */
+.category-actions .delete-btn {
+    background: #dc3545;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+    border: 1px solid #c82333;
+}
+
+.category-actions .delete-btn::before {
+    content: "✖";
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+.category-actions .delete-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
+}
+
+/* Efekt kliknięcia */
+.category-actions .edit-btn:active,
+.category-actions .delete-btn:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+/* Efekt ripple */
+.category-actions .edit-btn::after,
+.category-actions .delete-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.3s;
+}
+
+.category-actions .edit-btn:active::after,
+.category-actions .delete-btn:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 1;
+}
+
+/* Style dla komunikatów */
+.no-subcategories {
+    margin: 10px 0 10px 40px;
+    padding: 10px;
+    color: #6c757d;
+    font-style: italic;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.no-categories {
+    text-align: center;
+    padding: 20px;
+    color: #6c757d;
+    font-style: italic;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* Poziomy zagnieżdżenia */
+.level-1 { margin-left: 30px; }
+.level-2 { margin-left: 60px; }
+.level-3 { margin-left: 90px; }
+
+/* Style dla przycisków nawigacji */
+.navigation-buttons {
+    margin: -10px 0 30px 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(33, 150, 243, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-btn:hover {
+    background-color: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4);
+}
+
+.back-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+}
+
+/* Dodanie ikony strzałki */
+.back-btn::before {
+    content: "←";
+    margin-right: 10px;
+    font-size: 1.2em;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.back-btn:hover::before {
+    transform: translateX(-3px);
+}
+
+/* Dodanie efektu ripple przy kliknięciu */
+.back-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.back-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.back-btn:active::after {
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20, 20);
+        opacity: 0;
+    }
+}
+
+/* Style dla przycisków w panelu kategorii */
+.button-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.button-primary:hover {
+    background: linear-gradient(45deg, #45a049, #388E3C);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+}
+
+.button-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
+}
+
+/* Style dla formularza kategorii */
+.category-form {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.category-form .form-group {
+    margin-bottom: 20px;
+}
+
+.category-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.category-form input[type="text"],
+.category-form select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.category-form input[type="text"]:focus,
+.category-form select:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+.category-form select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* Animacja dla przycisku */
+.button-primary::before {
+    content: '+';
+    margin-right: 8px;
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+}
+
+.button-primary:hover::before {
+    transform: rotate(90deg);
+}
+
+/* Efekt ripple dla przycisku */
+.button-primary {
+    position: relative;
+    overflow: hidden;
+}
+
+.button-primary::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.button-primary:active::after {
+    animation: ripple 0.6s ease-out;
+}
+
+/* Style dla przycisków akcji w kategoriach */
+.category-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.category-actions .edit-btn,
+.category-actions .delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    color: white;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Style dla przycisku edycji */
+.category-actions .edit-btn {
+    background: #2196F3;
+    box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+    border: 1px solid #1976D2;
+}
+
+.category-actions .edit-btn::before {
+    content: "✎";
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+.category-actions .edit-btn:hover {
+    background: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4);
+}
+
+/* Style dla przycisku usuwania */
+.category-actions .delete-btn {
+    background: #dc3545;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+    border: 1px solid #c82333;
+}
+
+.category-actions .delete-btn::before {
+    content: "✖";
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+.category-actions .delete-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
+}
+
+/* Efekt kliknięcia */
+.category-actions .edit-btn:active,
+.category-actions .delete-btn:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+/* Efekt ripple */
+.category-actions .edit-btn::after,
+.category-actions .delete-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.3s;
+}
+
+.category-actions .edit-btn:active::after,
+.category-actions .delete-btn:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 1;
+}
+
