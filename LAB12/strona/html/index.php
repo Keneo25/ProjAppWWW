@@ -28,6 +28,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
                 <li><a href="index.php?id=history"><i class="fa-solid fa-landmark"></i></a></li>
                 <li><a href="index.php?id=logowanie"><i class="fa-solid fa-user"></i></a></li>
                 <li><a href="index.php?id=glowna"><i class="fa-solid fa-image"></i></a></li>
+                <li><a href="index.php?id=sklep"><i class="fa-solid fa-shop"></i> Sklep</a></li>
             </ul>
         </nav>
     </header>

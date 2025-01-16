@@ -1,101 +1,106 @@
-<!-- Główny kontener z flexbox, wycentrowany w pionie -->
 <div id="jeden" style="display: flex; flex-direction: column; align-items: center; padding: 2rem; gap: 2rem;" onload="startclock()">
     
-    <!-- Nagłówek strony -->
     <h1 style="text-align: center;">Jaki jest twój ulubiony kolor budynku?</h1>
     
-    <!-- Formularz z przyciskami do zmiany koloru tła -->
+   
     <form method="POST" name="background" style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
-        <!-- Przyciski zmiany koloru - każdy wywołuje funkcję changeBackground z odpowiednim kolorem -->
         <input type="button" value="żółty" onclick="changeBackground('#FFFF00')" 
                style="padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background-color: #FFFF00;">
-        <!-- Pozostałe przyciski... -->
+        <input type="button" value="czarny" onclick="changeBackground('#000000')" 
+               style="padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background-color: #000000; color: white;">
+        <input type="button" value="biały" onclick="changeBackground('#FFFFFF')" 
+               style="padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background-color: #FFFFFF;">
+        <input type="button" value="zielony" onclick="changeBackground('#00FF00')" 
+               style="padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background-color: #00FF00;">
+        <input type="button" value="niebieski" onclick="changeBackground('#0000FF')" 
+               style="padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background-color: #0000FF; color: white;">
+        <input type="button" value="pomarańczowy" onclick="changeBackground('#FF8000')" 
+               style="padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background-color: #FF8000;">
+        <input type="button" value="szary" onclick="changeBackground('#C0C0C0')" 
+               style="padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background-color: #C0C0C0;">
+        <input type="button" value="czerwony" onclick="changeBackground('#FF0000')" 
+               style="padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background-color: #FF0000; color: white;">
     </form>
 
-    <!-- Sekcja wyświetlająca aktualny czas i datę -->
+   
     <div style="text-align: center; margin: 2rem 0;">
         <div id="zegarek" style="font-size: 1.5rem; margin-bottom: 1rem;">aaaa</div>
         <div id="data" style="font-size: 1.2rem;"></div>
     </div>
 
-    <!-- Kontener z animowanymi blokami -->
+   
     <div style="position: relative; width: 400px; height: 400px; margin: 2rem auto;">
         
-        <!-- Centralny tekst "Animacje" -->
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
             <p style="font-size: 1.2rem; color: #333;">Animacje</p>
         </div>
 
-        <!-- Blok 1: Animacja wysokości - po kliknięciu zwiększa wysokość do 400px -->
+       
         <div id="animacjaTestowa1" class="test-block" 
-             style="/* ... style ... */">
+             style=" text-align: center; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 100px; background-color: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
             <p>Wieżowiec w budowie</p>
         </div>
 
-        <!-- Blok 2: Animacja szerokości - reaguje na najechanie myszką -->
         <div id="animacjaTestowa2" class="test-block" 
-             style="/* ... style ... */">
+             style="position: absolute; top: 50%; right: 0; transform: translateY(-50%); width: 150px; height: 100px; background-color: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
             <p>Rozbudowa</p>
         </div>
 
-        <!-- Blok 3: Animacja wieloparametrowa - zmienia rozmiar i przezroczystość -->
+        
         <div id="animacjaTestowa3" class="test-block" 
-             style="/* ... style ... */">
+             style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 100px; background-color: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
             <p>Zmiana fasady</p>
         </div>
 
-        <!-- Blok 4: Animacja obrotu - obraca element o 360 stopni -->
+       
         <div id="animacjaTestowa4" class="test-block" 
-             style="/* ... style ... */">
+             style="position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 150px; height: 100px; background-color: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
             <p>Nowy element</p>
         </div>
     </div>
 </div>
 
+
 <script>
-    // Animacja 1: Po kliknięciu zwiększa wysokość elementu do 400px w czasie 2 sekund
     console.log("Skrypt animacji załadowany");
     $("#animacjaTestowa1").on("click", function () {
         $(this).animate({
-            height: "400px" // Zmiana wysokości elementu
-        }, 2000); // Czas trwania animacji w milisekundach
+            height: "400px"
+        }, 2000);
     });
 
-    // Animacja 2: Reaguje na najechanie myszką - rozszerza i zwęża element
     console.log("Skrypt animacji 2 załadowany");
     $("#animacjaTestowa2").on({
         mouseover: function () {
             $(this).animate({
-                width: 300 // Zwiększa szerokość elementu
-            }, 800); // Czas trwania animacji w milisekundach
+                width: 300
+            }, 800);
         },
         mouseout: function () {
             $(this).animate({
-                width: 150 // Zmniejsza szerokość elementu
-            }, 800); // Czas trwania animacji w milisekundach
+                width: 150
+            }, 800);
         },
     });
 
-    // Animacja 3: Po kliknięciu zwiększa szerokość, wysokość i przezroczystość
     console.log("Skrypt animacji 3 załadowany");
     $("#animacjaTestowa3").on("click", function () {
         $(this).animate({
-            width: "+=" + 50, // Zwiększa szerokość o 50px
-            height: "+=" + 10, // Zwiększa wysokość o 10px
-            opacity: "+=" + 0.1, // Zwiększa przezroczystość o 0.1
-            duration: 3000 // Czas trwania animacji w milisekundach
+            width: "+=" + 50,
+            height: "+=" + 10,
+            opacity: "+=" + 0.1,
+            duration: 3000
         });
     });
 
-    // Animacja 4: Obraca element o 360 stopni po kliknięciu
+    
     $("#animacjaTestowa4").on("click", function () {
         $(this).animate({
-            rotate: '360deg' // Obrót elementu o 360 stopni
-        }, 2000); // Czas trwania animacji w milisekundach
+            rotate: '360deg'
+        }, 2000);
     });
 
-    // Uruchamia zegar po załadowaniu strony
     document.addEventListener('DOMContentLoaded', function() {
-        startclock(); // Wywołanie funkcji startclock() po załadowaniu DOM
+        startclock();
     });
 </script>

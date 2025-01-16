@@ -3,6 +3,13 @@
 session_start();
 include('../cfg.php'); // Włączenie pliku konfiguracyjnego, który zawiera dane logowania do bazy danych
 
+// Przeniesienie obsługi wylogowania na początek
+if(isset($_POST['wyloguj'])) {
+    session_destroy(); // Zakończenie sesji
+    header("Location: admin.php"); // Przekierowanie do strony logowania
+    exit(); // Dodanie exit() aby zatrzymać dalsze wykonywanie skryptu
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -71,6 +78,8 @@ function ListaPodstron() {
     echo '</table>';
     echo '<div class="action-buttons">';
     echo '<a href="admin.php?action=add" class="edit-btn">Dodaj nową podstronę</a>';
+    echo '<a href="admin.php?action=categories" class="edit-btn">Zarządzaj kategoriami</a>';
+    echo '<a href="admin.php?action=products" class="edit-btn">Zarządzaj produktami</a>';
     echo '</div>';
     echo '</div>';
     
@@ -154,54 +163,194 @@ function UsunPodstrone() {
     mysqli_close($link); // Zamknięcie połączenia z bazą danych
 }
 
-// Funkcja do dodawania kategorii
-function DodajKategorie($nazwa, $matka_id = 0) {
+// Funkcja wyświetlająca listę kategorii
+function ListaKategorii() {
     $link = dbConnect();
-    $query = "INSERT INTO kategorie (matka_id, nazwa) VALUES ('$matka_id', '$nazwa')";
-    mysqli_query($link, $query);
-    mysqli_close($link);
-}
-
-// Funkcja do usuwania kategorii
-function UsunKategorie($id) {
-    $link = dbConnect();
-    $query = "DELETE FROM kategorie WHERE id='$id'";
-    mysqli_query($link, $query);
-    mysqli_close($link);
-}
-
-// Funkcja do edytowania kategorii
-function EdytujKategorie($id, $nazwa, $matka_id) {
-    $link = dbConnect();
-    $query = "UPDATE kategorie SET nazwa='$nazwa', matka_id='$matka_id' WHERE id='$id'";
-    mysqli_query($link, $query);
-    mysqli_close($link);
-}
-
-// Funkcja do wyświetlania kategorii w formie drzewa
-function PokazKategorie($matka_id = 0) {
-    $link = dbConnect();
-    $query = "SELECT * FROM kategorie WHERE matka_id='$matka_id'";
-    $result = mysqli_query($link, $query);
     
-    if (mysqli_num_rows($result) > 0) {
-        echo '<ul style="list-style-type: none; padding: 0;">';
-        while ($row = mysqli_fetch_assoc($result)) {
-            // Sprawdzenie, czy kategoria jest główną (matka_id = 0)
-            $isMainCategory = $row['matka_id'] == 0;
-
-            // Dodanie stylu do głównych kategorii
-            $fontWeight = $isMainCategory ? 'bold' : 'normal'; // Wytłuszczenie głównych kategorii
-
-            echo '<li style="text-align: center; background-color: #f0f0f0; padding: 10px; border-radius: 5px; max-width: 400px; margin: 10px auto; font-weight: ' . $fontWeight . ';">' . $row['nazwa'] . ' (ID: ' . $row['id'] . ')'; // Dodano ID obok nazwy
-            // Rekursywne wywołanie dla podkategorii
-            PokazKategorie($row['id']);
-            echo '</li>';
+    echo '<div class="admin-form">';
+    // Dodanie przycisku powrotu
+    echo '<div class="navigation-buttons">';
+    echo '<a href="admin.php" class="back-btn">Powrót do listy podstron</a>';
+    echo '</div>';
+    
+    echo '<h2>Zarządzanie Kategoriami</h2>';
+    
+    // Wyświetl formularz dodawania kategorii
+    echo '<form method="post" action="admin.php?action=categories" class="category-form">';
+    echo '<div class="form-group">';
+    echo '<label for="category_name">Nazwa kategorii:</label>';
+    echo '<input type="text" name="category_name" required>';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="parent_id">Kategoria nadrzędna:</label>';
+    echo '<select name="parent_id">';
+    echo '<option value="0">Brak (kategoria główna)</option>';
+    
+    // Funkcja pomocnicza do rekurencyjnego wyświetlania kategorii
+    function displayCategoryOptions($parent_id = 0, $level = 0, $exclude_id = null) {
+        $link = dbConnect();
+        $indent = str_repeat('--', $level);
+        
+        $query = "SELECT * FROM categories WHERE parent_id = $parent_id ORDER BY name";
+        $result = mysqli_query($link, $query);
+        
+        while($row = mysqli_fetch_array($result)) {
+            if($row['id'] != $exclude_id) {
+                echo '<option value="'.$row['id'].'">'.$indent.' '.$row['name'].'</option>';
+                // Rekurencyjne wywołanie dla podkategorii
+                displayCategoryOptions($row['id'], $level + 1, $exclude_id);
+            }
         }
-        echo '</ul>';
+        
+        mysqli_close($link);
     }
     
+    // Wywołanie funkcji pomocniczej
+    displayCategoryOptions();
+    
+    echo '</select>';
+    echo '</div>';
+    
+    echo '<input type="submit" name="add_category" value="Dodaj kategorię" class="button-primary">';
+    echo '</form>';
+    
+    // Modyfikacja wyświetlania struktury kategorii
+    function displayCategoryTree($parent_id = 0, $level = 0) {
+        $link = dbConnect();
+        $query = "SELECT * FROM categories WHERE parent_id = $parent_id ORDER BY name";
+        $result = mysqli_query($link, $query);
+        
+        if(mysqli_num_rows($result) > 0) {
+            while($category = mysqli_fetch_array($result)) {
+                echo '<div class="category-main level-'.$level.'">';
+                echo '<div class="category-row">';
+                echo '<div class="category-info">';
+                // Ikona folderu i strzałki dla lepszej wizualizacji hierarchii
+                echo '<span class="category-icon">'.($level > 0 ? '└─ ' : '').'📁</span>';
+                echo '<span class="category-name">'.$category['name'].'</span>';
+                if($level > 0) {
+                    echo '<span class="category-type">(podkategoria)</span>';
+                }
+                echo '</div>';
+                echo '<div class="category-actions">';
+                echo '<a href="admin.php?action=edit_category&id='.$category['id'].'" class="edit-btn">Edytuj</a>';
+                echo '<a href="admin.php?action=delete_category&id='.$category['id'].'" class="delete-btn" 
+                        onclick="return confirm(\'Czy na pewno chcesz usunąć kategorię '.$category['name'].' i przenieść jej podkategorie do kategorii głównych?\')">Usuń</a>';
+                echo '</div>';
+                echo '</div>';
+                
+                // Rekurencyjne wywołanie dla podkategorii
+                displayCategoryTree($category['id'], $level + 1);
+                
+                echo '</div>';
+            }
+        }
+        
+        mysqli_close($link);
+    }
+    
+    // Wyświetl drzewo kategorii
+    echo '<div class="categories-tree">';
+    echo '<h3>Struktura kategorii</h3>';
+    
+    if(mysqli_num_rows(mysqli_query($link, "SELECT * FROM categories WHERE parent_id = 0")) > 0) {
+        echo '<div class="category-structure">';
+        displayCategoryTree();
+        echo '</div>';
+    } else {
+        echo '<div class="no-categories">Brak kategorii</div>';
+    }
+    
+    echo '</div>';
+    echo '</div>';
+    
     mysqli_close($link);
+}
+
+// Funkcja dodająca nową kategorię
+function DodajKategorie() {
+    if(isset($_POST['add_category'])) {
+        $link = dbConnect();
+        $name = mysqli_real_escape_string($link, $_POST['category_name']);
+        $parent_id = (int)$_POST['parent_id'];
+        
+        $query = "INSERT INTO categories (name, parent_id) VALUES ('$name', $parent_id)";
+        mysqli_query($link, $query);
+        
+        mysqli_close($link);
+        header("Location: admin.php?action=categories");
+        exit();
+    }
+}
+
+// Funkcja edytująca kategorię
+function EdytujKategorie() {
+    $link = dbConnect();
+    $id = (int)$_GET['id'];
+    
+    if(isset($_POST['update_category'])) {
+        $name = mysqli_real_escape_string($link, $_POST['category_name']);
+        $parent_id = (int)$_POST['parent_id'];
+        
+        $query = "UPDATE categories SET name='$name', parent_id=$parent_id WHERE id=$id";
+        mysqli_query($link, $query);
+        
+        header("Location: admin.php?action=categories");
+        exit();
+    }
+    
+    $query = "SELECT * FROM categories WHERE id=$id";
+    $result = mysqli_query($link, $query);
+    $category = mysqli_fetch_array($result);
+    
+    echo '<div class="admin-form">';
+    // Dodanie przycisku powrotu
+    echo '<div class="navigation-buttons">';
+    echo '<a href="admin.php?action=categories" class="back-btn">Powrót do kategorii</a>';
+    echo '</div>';
+    
+    echo '<h2>Edytuj kategorię</h2>';
+    echo '<form method="post" action="" class="category-form">';
+    echo '<div class="form-group">';
+    echo '<label for="category_name">Nazwa kategorii:</label>';
+    echo '<input type="text" name="category_name" value="'.$category['name'].'" required>';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="parent_id">Kategoria nadrzędna:</label>';
+    echo '<select name="parent_id">';
+    echo '<option value="0" '.($category['parent_id'] == 0 ? 'selected' : '').'>Brak (kategoria główna)</option>';
+    
+    // Wykorzystanie tej samej funkcji pomocniczej
+    displayCategoryOptions(0, 0, $id);
+    
+    echo '</select>';
+    echo '</div>';
+    
+    echo '<input type="submit" name="update_category" value="Zapisz zmiany" class="button-primary">';
+    echo '</form>';
+    echo '</div>';
+    
+    mysqli_close($link);
+}
+
+// Funkcja usuwająca kategorię
+function UsunKategorie() {
+    $link = dbConnect();
+    $id = (int)$_GET['id'];
+    
+    // Najpierw przenieś wszystkie podkategorie do kategorii głównej
+    $query = "UPDATE categories SET parent_id = 0 WHERE parent_id = $id";
+    mysqli_query($link, $query);
+    
+    // Następnie usuń kategorię
+    $query = "DELETE FROM categories WHERE id = $id LIMIT 1";
+    mysqli_query($link, $query);
+    
+    mysqli_close($link);
+    header("Location: admin.php?action=categories");
+    exit();
 }
 
 // Logowanie użytkownika
@@ -231,175 +380,456 @@ if(isset($_SESSION['zalogowany']) && $_SESSION['zalogowany'] == true) {
             case 'delete':
                 UsunPodstrone(); // Wywołanie funkcji usuwającej podstronę
                 break;
+            case 'categories':
+                DodajKategorie();
+                ListaKategorii();
+                break;
+            case 'edit_category':
+                EdytujKategorie();
+                break;
+            case 'delete_category':
+                UsunKategorie();
+                break;
+            case 'products':
+                ListaProduktow();
+                break;
+            case 'add_product':
+                DodajProdukt();
+                break;
+            case 'edit_product':
+                EdytujProdukt();
+                break;
+            case 'delete_product':
+                UsunProdukt();
+                break;
             default:
                 ListaPodstron(); // Domyślnie wyświetlenie listy podstron
         }
     } else {
         ListaPodstron(); // Domyślnie wyświetlenie listy podstron
     }
+    
+    // Formularz do wylogowania
+    echo '<form method="post" class="logout-form">';
+    echo '<input type="submit" name="wyloguj" value="Wyloguj">'; // Przycisk do wylogowania
+    echo '</form>';
 } else {
     echo FormularzLogowania(); // Wyświetlenie formularza logowania
 }
 
-// Wylogowanie użytkownika
-if(isset($_POST['wyloguj'])) {
-    session_destroy(); // Zakończenie sesji
-    header("Location: admin.php"); // Przekierowanie do strony logowania
-}
-
-// Formularz do dodawania kategorii
-echo '<div class="admin-form">';
-echo '<h2>Dodaj kategorię</h2>';
-echo '<form method="POST" action="">
-        <div class="form-group">
-            <label>Nazwa kategorii:</label>
-            <input type="text" name="nazwa" required>
-        </div>
-        <div class="form-group">
-            <label>ID kategorii matki (0 dla głównej):</label>
-            <input type="number" name="matka_id" value="0">
-        </div>
-        <div class="form-group">
-            <input type="submit" name="dodaj" value="Dodaj kategorię">
-        </div>
-      </form>
-</div>';
-
-// Obsługa dodawania kategorii
-if (isset($_POST['dodaj'])) {
-    DodajKategorie($_POST['nazwa'], $_POST['matka_id']);
-}
-
-// Formularz do edytowania kategorii
-echo '<div class="admin-form">';
-echo '<h2>Edytuj kategorię</h2>';
-echo '<form method="POST" action="">
-        <div class="form-group">
-            <label>ID kategorii do edytowania:</label>
-            <input type="number" name="id" required>
-        </div>
-        <div class="form-group">
-            <label>Nowa nazwa kategorii:</label>
-            <input type="text" name="nazwa" required>
-        </div>
-        <div class="form-group">
-            <label>ID kategorii matki (0 dla głównej):</label>
-            <input type="number" name="matka_id" value="0">
-        </div>
-        <div class="form-group">
-            <input type="submit" name="edytuj" value="Edytuj kategorię">
-        </div>
-      </form>
-</div>';
-
-// Obsługa edytowania kategorii
-if (isset($_POST['edytuj'])) {
-    EdytujKategorie($_POST['id'], $_POST['nazwa'], $_POST['matka_id']);
-}
-
-// Formularz do usuwania kategorii
-echo '<div class="admin-form">';
-echo '<h2>Usuń kategorię</h2>';
-echo '<form method="POST" action="">
-        <div class="form-group">
-            <label>ID kategorii do usunięcia:</label>
-            <input type="number" name="id" required>
-        </div>
-        <div class="form-group">
-            <input type="submit" name="usun" value="Usuń kategorię" onclick="return confirm(\'Czy na pewno chcesz usunąć tę kategorię?\')">
-        </div>
-      </form>
-</div>';
-
-// Obsługa usuwania kategorii
-if (isset($_POST['usun'])) {
-    UsunKategorie($_POST['id']);
-}
-
-// Wyświetlenie kategorii
-echo '<div class="admin-form">';
-echo '<h2>Lista kategorii</h2>';
-PokazKategorie(); // Wyświetlenie kategorii
-echo '</div>';
-
-// Dodaj formularz produktu
-echo '<div class="admin-form">';
-echo '<h2>Dodaj nowy produkt</h2>';
-echo '<form method="post" action="" enctype="multipart/form-data">
-        <div class="form-group">
-            <label>Tytuł:</label>
-            <input type="text" name="tytul" required>
-        </div>
-        <div class="form-group">
-            <label>Opis:</label>
-            <textarea name="opis"></textarea>
-        </div>
-        <div class="form-group">
-            <label>Cena netto:</label>
-            <input type="number" step="0.01" name="cena_netto" required>
-        </div>
-        <div class="form-group">
-            <label>VAT (%):</label>
-            <input type="number" step="0.01" name="podatek_vat" value="23" required>
-        </div>
-        <div class="form-group">
-            <label>Ilość dostępnych:</label>
-            <input type="number" name="ilosc_dostepnych" required>
-        </div>
-        <div class="form-group">
-            <label>Status dostępności:</label>
-            <select name="status_dostepnosci">
-                <option value="dostępny">Dostępny</option>
-                <option value="niedostępny">Niedostępny</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Kategoria:</label>
-            <input type="text" name="kategoria">
-        </div>
-        <div class="form-group">
-            <label>Gabaryt:</label>
-            <input type="text" name="gabaryt">
-        </div>
-        <div class="form-group">
-            <label>Zdjęcie:</label>
-            <input type="file" name="zdjecie">
-        </div>
-        <div class="form-group">
-            <input type="submit" name="dodaj_produkt" value="Dodaj produkt">
-        </div>
-    </form>
-</div>';
-
-// Obsługa dodawania produktu
-if (isset($_POST['dodaj_produkt'])) {
+// Funkcja wyświetlająca listę produktów
+function ListaProduktow() {
     $link = dbConnect();
-    $query = "INSERT INTO produkty (tytul, opis, cena_netto, podatek_vat, ilosc_dostepnych, status_dostepnosci, kategoria, gabaryt) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = mysqli_prepare($link, $query);
-    mysqli_stmt_bind_param($stmt, "ssddisss", 
-        $_POST['tytul'],
-        $_POST['opis'],
-        $_POST['cena_netto'],
-        $_POST['podatek_vat'],
-        $_POST['ilosc_dostepnych'],
-        $_POST['status_dostepnosci'],
-        $_POST['kategoria'],
-        $_POST['gabaryt']
-    );
-    mysqli_stmt_execute($stmt);
+    
+    echo '<div class="products-section">';
+    echo '<h2>Zarządzanie Produktami</h2>';
+    
+    // Dodanie przycisku powrotu
+    echo '<div class="navigation-buttons">';
+    echo '<a href="admin.php" class="back-btn">Powrót do listy podstron</a>';
+    echo '</div>';
+    
+    // Przycisk dodawania nowego produktu
+    echo '<div class="action-buttons">';
+    echo '<a href="admin.php?action=add_product" class="edit-btn">Dodaj nowy produkt</a>';
+    echo '</div>';
+    
+    $query = "SELECT p.*, c.name as category_name FROM products p 
+              LEFT JOIN categories c ON p.category_id = c.id 
+              ORDER BY p.creation_date DESC";
+    $result = mysqli_query($link, $query);
+    
+    echo '<table class="products-table">';
+    echo '<tr>
+            <th>ID</th>
+            <th>Zdjęcie</th>
+            <th>Tytuł</th>
+            <th>Cena</th>
+            <th>Stan</th>
+            <th>Kategoria</th>
+            <th>Status</th>
+            <th>Akcje</th>
+          </tr>';
+    
+    while($row = mysqli_fetch_array($result)) {
+        $status_class = 'status-' . $row['availability_status'];
+        $status_text = ucfirst(str_replace('_', ' ', $row['availability_status']));
+        
+        echo '<tr>';
+        echo '<td>'.$row['id'].'</td>';
+        echo '<td><img src="'.($row['image_url'] ? '..'.$row['image_url'] : '../img/no-image.png').'" alt="'.$row['title'].'"></td>';
+        echo '<td>'.$row['title'].'</td>';
+        echo '<td>'.number_format($row['net_price'] * (1 + $row['vat_rate']/100), 2).' PLN</td>';
+        echo '<td>'.$row['stock_quantity'].'</td>';
+        echo '<td>'.$row['category_name'].'</td>';
+        echo '<td><span class="status-badge '.$status_class.'">'.$status_text.'</span></td>';
+        echo '<td>
+                <div class="action-buttons">
+                    <a href="admin.php?action=edit_product&id='.$row['id'].'" class="edit-btn">Edytuj</a>
+                    <a href="admin.php?action=delete_product&id='.$row['id'].'" class="delete-btn" 
+                       onclick="return confirm(\'Czy na pewno chcesz usunąć ten produkt?\')">Usuń</a>
+                </div>
+              </td>';
+        echo '</tr>';
+    }
+    
+    echo '</table>';
+    echo '</div>';
+    
     mysqli_close($link);
-    header('Location: admin.php');
+}
+
+// Funkcja dodająca nowy produkt
+function DodajProdukt() {
+    $link = dbConnect();
+    
+    if(isset($_POST['add_product'])) {
+        try {
+            // Obsługa przesłanego zdjęcia
+            $image_url = '';
+            if(isset($_FILES["product_image"]) && $_FILES["product_image"]["error"] == 0) {
+                $image_url = ObslugaZdjecia($_FILES["product_image"]);
+            }
+            
+            $title = mysqli_real_escape_string($link, $_POST['title']);
+            $description = mysqli_real_escape_string($link, $_POST['description']);
+            $net_price = (float)$_POST['net_price'];
+            $vat_rate = (float)$_POST['vat_rate'];
+            $stock_quantity = (int)$_POST['stock_quantity'];
+            $category_id = (int)$_POST['category_id'];
+            $dimensions = mysqli_real_escape_string($link, $_POST['dimensions']);
+            $expiration_date = $_POST['expiration_date'];
+            $availability_status = mysqli_real_escape_string($link, $_POST['availability_status']);
+            
+            $query = "INSERT INTO products (title, description, net_price, vat_rate, stock_quantity, 
+                      category_id, dimensions, image_url, expiration_date, availability_status) 
+                      VALUES ('$title', '$description', $net_price, $vat_rate, $stock_quantity, 
+                      $category_id, '$dimensions', '$image_url', '$expiration_date', '$availability_status')";
+            
+            mysqli_query($link, $query);
+            header("Location: admin.php?action=products");
+            exit();
+        } catch (Exception $e) {
+            echo '<div class="error">'.$e->getMessage().'</div>';
+        }
+    }
+    
+    echo '<div class="product-form">';
+    echo '<h2>Dodaj nowy produkt</h2>';
+    
+    // Dodanie przycisku powrotu
+    echo '<div class="navigation-buttons">';
+    echo '<a href="admin.php?action=products" class="back-btn">Powrót do listy produktów</a>';
+    echo '</div>';
+    
+    WyswietlFormularzProduktu();
+    // Dodaj przycisk submit
+    echo '<div class="form-group">';
+    echo '<input type="submit" name="add_product" value="Dodaj produkt" class="button-primary">';
+    echo '</div>';
+    echo '</form>'; // Zamknij formularz
+    echo '</div>';
+    
+    mysqli_close($link);
+}
+
+// Funkcja edytująca produkt
+function EdytujProdukt() {
+    $link = dbConnect();
+    $id = (int)$_GET['id'];
+    
+    if(isset($_POST['update_product'])) {
+        try {
+            // Obsługa przesłanego zdjęcia
+            $image_url = $_POST['current_image'] ?? ''; // Zachowaj obecne zdjęcie
+            if(isset($_FILES["product_image"]) && $_FILES["product_image"]["error"] == 0) {
+                $image_url = ObslugaZdjecia($_FILES["product_image"]);
+                
+                // Usuń stare zdjęcie jeśli istnieje
+                if(!empty($_POST['current_image'])) {
+                    $old_file = $_SERVER['DOCUMENT_ROOT'] . $_POST['current_image'];
+                    if(file_exists($old_file)) {
+                        unlink($old_file);
+                    }
+                }
+            }
+            
+            $title = mysqli_real_escape_string($link, $_POST['title']);
+            $description = mysqli_real_escape_string($link, $_POST['description']);
+            $net_price = (float)$_POST['net_price'];
+            $vat_rate = (float)$_POST['vat_rate'];
+            $stock_quantity = (int)$_POST['stock_quantity'];
+            $category_id = (int)$_POST['category_id'];
+            $dimensions = mysqli_real_escape_string($link, $_POST['dimensions']);
+            $expiration_date = $_POST['expiration_date'];
+            $availability_status = mysqli_real_escape_string($link, $_POST['availability_status']);
+            
+            // Dodaj image_url do zapytania UPDATE tylko jeśli się zmieniło
+            $query = "UPDATE products SET 
+                      title='$title', 
+                      description='$description', 
+                      net_price=$net_price, 
+                      vat_rate=$vat_rate, 
+                      stock_quantity=$stock_quantity, 
+                      category_id=$category_id, 
+                      dimensions='$dimensions', 
+                      image_url='$image_url', 
+                      expiration_date='$expiration_date', 
+                      availability_status='$availability_status'
+                      WHERE id=$id";
+            
+            mysqli_query($link, $query);
+            header("Location: admin.php?action=products");
+            exit();
+        } catch (Exception $e) {
+            echo '<div class="error">'.$e->getMessage().'</div>';
+        }
+    }
+    
+    $query = "SELECT * FROM products WHERE id=$id";
+    $result = mysqli_query($link, $query);
+    $product = mysqli_fetch_array($result);
+    
+    echo '<div class="product-form">';
+    echo '<h2>Edytuj produkt</h2>';
+    
+    // Dodanie przycisku powrotu
+    echo '<div class="navigation-buttons">';
+    echo '<a href="admin.php?action=products" class="back-btn">Powrót do listy produktów</a>';
+    echo '</div>';
+    
+    echo '<form method="post" action="" enctype="multipart/form-data">';
+    
+    // Dodaj ukryte pole z obecną ścieżką do obrazu
+    if($product['image_url']) {
+        echo '<input type="hidden" name="current_image" value="'.$product['image_url'].'">';
+    }
+    
+    // Formularz edycji produktu
+    WyswietlFormularzProduktu($product);
+    
+    echo '<input type="submit" name="update_product" value="Zapisz zmiany" class="button-primary">';
+    echo '</form>';
+    echo '</div>';
+    
+    mysqli_close($link);
+}
+
+// Funkcja pomocnicza do wyświetlania formularza produktu
+function WyswietlFormularzProduktu($product = null) {
+    $link = dbConnect();
+    
+    // Otwórz formularz, ale nie zamykaj go
+    echo '<form method="post" action="" enctype="multipart/form-data">';
+    
+    echo '<div class="form-group">';
+    echo '<label for="title">Tytuł:</label>';
+    echo '<input type="text" name="title" value="'.($product ? $product['title'] : '').'" required>';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="description">Opis:</label>';
+    echo '<textarea name="description" required>'.($product ? $product['description'] : '').'</textarea>';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="net_price">Cena netto:</label>';
+    echo '<input type="number" step="0.01" name="net_price" value="'.($product ? $product['net_price'] : '').'" required>';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="vat_rate">Stawka VAT (%):</label>';
+    echo '<input type="number" step="0.01" name="vat_rate" value="'.($product ? $product['vat_rate'] : '23').'" required>';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="stock_quantity">Stan magazynowy:</label>';
+    echo '<input type="number" name="stock_quantity" value="'.($product ? $product['stock_quantity'] : '0').'" required>';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="category_id">Kategoria:</label>';
+    echo '<select name="category_id" required>';
+    
+    $query = "SELECT * FROM categories ORDER BY name";
+    $result = mysqli_query($link, $query);
+    
+    while($category = mysqli_fetch_array($result)) {
+        $selected = ($product && $product['category_id'] == $category['id']) ? 'selected' : '';
+        echo '<option value="'.$category['id'].'" '.$selected.'>'.$category['name'].'</option>';
+    }
+    
+    echo '</select>';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="dimensions">Wymiary:</label>';
+    echo '<input type="text" name="dimensions" value="'.($product ? $product['dimensions'] : '').'" placeholder="np. 100x50x25 cm">';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="product_image">Zdjęcie produktu:</label>';
+    echo '<div class="image-upload-container">';
+    echo '<label class="image-upload-label">';
+    echo '<i class="fas fa-cloud-upload-alt"></i> Wybierz zdjęcie lub upuść je tutaj';
+    echo '<input type="file" name="product_image" id="product_image" accept="image/*" '.(!$product ? 'required' : '').'>';
+    echo '</label>';
+    echo '<div class="upload-progress"><div class="upload-progress-bar"></div></div>';
+    if($product && $product['image_url']) {
+        echo '<div class="image-upload-preview">';
+        echo '<img src="'.$product['image_url'].'" alt="Podgląd produktu">';
+        echo '<div class="remove-image" title="Usuń zdjęcie">×</div>';
+        echo '</div>';
+    }
+    echo '</div>';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="expiration_date">Data wygaśnięcia:</label>';
+    echo '<input type="date" name="expiration_date" value="'.($product ? $product['expiration_date'] : '').'">';
+    echo '</div>';
+    
+    echo '<div class="form-group">';
+    echo '<label for="availability_status">Status dostępności:</label>';
+    echo '<select name="availability_status" required>';
+    $statuses = ['available' => 'Dostępny', 'unavailable' => 'Niedostępny', 'coming_soon' => 'Wkrótce dostępny'];
+    foreach($statuses as $value => $label) {
+        $selected = ($product && $product['availability_status'] == $value) ? 'selected' : '';
+        echo '<option value="'.$value.'" '.$selected.'>'.$label.'</option>';
+    }
+    echo '</select>';
+    echo '</div>';
+    
+    mysqli_close($link);
+}
+
+// Funkcja usuwająca produkt
+function UsunProdukt() {
+    $link = dbConnect();
+    $id = (int)$_GET['id'];
+    
+    $query = "DELETE FROM products WHERE id = $id LIMIT 1";
+    mysqli_query($link, $query);
+    
+    header("Location: admin.php?action=products");
     exit();
 }
 
-// Formularz wylogowania
-echo '<div class="admin-form" style="text-align: center;">'; 
-echo '<form method="post" class="logout-form">
-        <div class="form-group">
-            <input type="submit" name="wyloguj" value="Wyloguj">
-        </div>
-      </form>';
-echo '</div>';
+// Dodaj nową funkcję do obsługi uploadu zdjęć
+function ObslugaZdjecia($file) {
+    $target_dir = "../uploads/products/";
+    
+    // Sprawdź czy katalog istnieje, jeśli nie - utwórz go
+    if (!file_exists($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+    
+    $file_extension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
+    $new_filename = uniqid() . '.' . $file_extension;
+    $target_file = $target_dir . $new_filename;
+    
+    // Sprawdź czy plik jest rzeczywistym obrazem
+    $check = getimagesize($file["tmp_name"]);
+    if($check === false) {
+        throw new Exception("Plik nie jest obrazem.");
+    }
+    
+    // Sprawdź rozmiar pliku (max 5MB)
+    if ($file["size"] > 5000000) {
+        throw new Exception("Plik jest zbyt duży (max 5MB).");
+    }
+    
+    // Zezwól tylko na określone formaty plików
+    $allowed_types = array("jpg", "jpeg", "png", "gif");
+    if (!in_array($file_extension, $allowed_types)) {
+        throw new Exception("Dozwolone są tylko pliki JPG, JPEG, PNG i GIF.");
+    }
+    
+    // Przenieś plik do docelowego katalogu
+    if (move_uploaded_file($file["tmp_name"], $target_file)) {
+        return "/uploads/products/" . $new_filename; // Zwróć ścieżkę względną
+    } else {
+        throw new Exception("Wystąpił błąd podczas przesyłania pliku.");
+    }
+}
+
+echo '<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const fileInput = document.getElementById("product_image");
+    const uploadContainer = document.querySelector(".image-upload-container");
+    const progressBar = document.querySelector(".upload-progress-bar");
+    const progress = document.querySelector(".upload-progress");
+    
+    if(fileInput) {
+        fileInput.addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    let preview = uploadContainer.querySelector(".image-upload-preview");
+                    if(!preview) {
+                        preview = document.createElement("div");
+                        preview.className = "image-upload-preview";
+                        uploadContainer.appendChild(preview);
+                    }
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" alt="Podgląd">
+                        <div class="remove-image" title="Usuń zdjęcie">×</div>
+                    `;
+                    
+                    // Obsługa usuwania zdjęcia
+                    preview.querySelector(".remove-image").addEventListener("click", function() {
+                        preview.remove();
+                        fileInput.value = "";
+                    });
+                };
+                reader.readAsDataURL(file);
+                
+                // Symulacja postępu uploadu
+                progress.style.display = "block";
+                let width = 0;
+                const interval = setInterval(() => {
+                    if(width >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            progress.style.display = "none";
+                            progressBar.style.width = "0%";
+                        }, 500);
+                    } else {
+                        width += 5;
+                        progressBar.style.width = width + "%";
+                    }
+                }, 50);
+            }
+        });
+        
+        // Obsługa przeciągania i upuszczania
+        uploadContainer.addEventListener("dragover", function(e) {
+            e.preventDefault();
+            uploadContainer.style.borderColor = "#3498db";
+            uploadContainer.style.backgroundColor = "#f0f4f7";
+        });
+        
+        uploadContainer.addEventListener("dragleave", function(e) {
+            e.preventDefault();
+            uploadContainer.style.borderColor = "#ddd";
+            uploadContainer.style.backgroundColor = "#f8f9fa";
+        });
+        
+        uploadContainer.addEventListener("drop", function(e) {
+            e.preventDefault();
+            uploadContainer.style.borderColor = "#ddd";
+            uploadContainer.style.backgroundColor = "#f8f9fa";
+            
+            const file = e.dataTransfer.files[0];
+            if(file && file.type.startsWith("image/")) {
+                fileInput.files = e.dataTransfer.files;
+                const event = new Event("change");
+                fileInput.dispatchEvent(event);
+            }
+        });
+    }
+});
+</script>';
 
 ?>

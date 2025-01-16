@@ -203,61 +203,22 @@ nav a i {
 
 /* Stylizacja formularzy */
 form {
-    background-color: #f9f9f9; /* Jasne tło formularza */
-    border: 1px solid #ccc; /* Szary obramowanie */
-    border-radius: 5px; /* Zaokrąglone rogi */
-    padding: 20px; /* Wewnętrzne odstępy */
-    margin-bottom: 20px; /* Odstęp między formularzami */
+    max-width: 500px; /* Maksymalna szerokość */
+    margin: 2rem auto; /* Margines */
+    padding: 2rem; /* Padding */
+    background-color: #fff; /* Kolor tła */
+    border-radius: 8px; /* Zaokrąglenie rogów */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Cień */
 }
 
-form h2 {
-    margin-top: 0; /* Usunięcie górnego marginesu */
-    color: #333; /* Kolor nagłówka */
-    text-align: center; /* Wyśrodkowanie nagłówka */
-}
-
-input[type="text"],
-input[type="number"],
-input[type="submit"] {
+/* Stylizacja pól formularzy */
+input, textarea {
     width: 100%; /* Szerokość 100% */
-    padding: 10px; /* Wewnętrzne odstępy */
-    margin: 10px 0; /* Odstępy między polami */
-    border: 1px solid #ccc; /* Szary obramowanie */
-    border-radius: 4px; /* Zaokrąglone rogi */
-    box-sizing: border-box; /* Umożliwia dodanie paddingu do szerokości */
-}
-
-input[type="submit"] {
-    background-color: #4CAF50; /* Zielony kolor tła */
-    color: white; /* Biały kolor tekstu */
-    cursor: pointer; /* Kursor wskazujący */
-}
-
-input[type="submit"]:hover {
-    background-color: #45a049; /* Ciemniejszy zielony przy najechaniu */
-}
-
-/* Styl dla listy kategorii */
-ul {
-    list-style-type: none; /* Usunięcie punktów z listy */
-    padding: 0; /* Usunięcie wewnętrznych odstępów */
-}
-
-ul li {
-    padding: 10px; /* Wewnętrzne odstępy dla elementów listy */
-    border: 1px solid #ddd; /* Szare obramowanie */
-    margin: 5px 0; /* Odstępy między elementami listy */
-    border-radius: 4px; /* Zaokrąglone rogi */
-    background-color: #f1f1f1; /* Jasne tło dla elementów listy */
-}
-
-ul li:hover {
-    background-color: #e1e1e1; /* Ciemniejsze tło przy najechaniu */
-}
-
-/* Wyśrodkowanie nagłówków h2 w sekcji wyświetlania kategorii */
-h2 {
-    text-align: center; /* Wyśrodkowanie nagłówka */
+    padding: 0.8rem; /* Padding */
+    margin-bottom: 1rem; /* Margines dolny */
+    border: 1px solid #ddd; /* Ramka */
+    border-radius: 4px; /* Zaokrąglenie rogów */
+    font-size: 1rem; /* Rozmiar czcionki */
 }
 
 /* Stylizacja przycisków */
@@ -660,26 +621,124 @@ img {
 
 /* Stylizacja przycisków akcji */
 .action-buttons {
-    display: flex; /* Flexbox dla przycisków akcji */
-    gap: 10px; /* Odstęp między przyciskami */
+    display: flex;
+    gap: 12px;
 }
 
-/* Stylizacja linków akcji */
 .action-buttons a {
-    padding: 6px 12px; /* Padding */
-    border-radius: 4px; /* Zaokrąglenie rogów */
-    text-decoration: none; /* Brak podkreślenia */
-    color: white; /* Kolor tekstu */
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 100px;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 /* Stylizacja przycisku edycji */
 .edit-btn {
-    background-color: #4CAF50; /* Kolor tła */
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
 }
 
-/* Stylizacja przycisku usunięcia */
+.edit-btn:hover {
+    background: linear-gradient(135deg, #45a049, #388E3C);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+.edit-btn::before {
+    content: '✎';
+    font-size: 1.2em;
+    margin-right: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+/* Stylizacja przycisku usuwania */
 .delete-btn {
-    background-color: #f44336; /* Kolor tła */
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+    box-shadow: 0 2px 10px rgba(255, 68, 68, 0.3);
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #cc0000, #b30000);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+}
+
+.delete-btn::before {
+    content: '🗑';
+    font-size: 1.2em;
+    margin-right: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+/* Efekt ripple dla przycisków */
+.action-buttons a::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.action-buttons a:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(40, 40);
+    }
+}
+
+/* Responsywność przycisków */
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .action-buttons a {
+        width: 100%;
+        padding: 10px 20px;
+        justify-content: center;
+    }
+}
+
+/* Hover efekt dla ikon */
+.action-buttons a:hover::before {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
 }
 
 /* Stylizacja formularza wylogowania */
@@ -747,80 +806,661 @@ img {
     background-color: #45a049; /* Zmiana koloru tła */
 }
 
-/* Kontener dla sekcji zarządzania produktami */
-.products-management {
-    padding: 20px;                /* Wewnętrzny odstęp 20px */
-    margin: 20px 0;              /* Margines górny i dolny 20px, boczne 0 */
+/* Stylizacja drzewa kategorii */
+.categories-tree {
+    margin-top: 30px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
-/* Główna tabela produktów */
+/* Stylizacja głównej kategorii */
+.category-main {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+/* Dodanie wcięć dla poziomów */
+.level-0 { margin-left: 0; }
+.level-1 { margin-left: 30px; }
+.level-2 { margin-left: 60px; }
+.level-3 { margin-left: 90px; }
+
+/* Stylizacja wiersza kategorii */
+.category-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    margin: 8px 0;
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.category-row:hover {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateX(5px);
+}
+
+/* Stylizacja informacji o kategorii */
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Stylizacja ikony kategorii */
+.category-icon {
+    color: #6c757d;
+    font-size: 1.1em;
+    min-width: 24px;
+}
+
+/* Stylizacja nazwy kategorii */
+.category-name {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+/* Stylizacja typu kategorii */
+.category-type {
+    font-size: 0.85em;
+    color: #6c757d;
+    font-style: italic;
+    margin-left: 10px;
+}
+
+/* Stylizacja przycisków akcji w kategoriach */
+.category-actions {
+    display: flex;
+    gap: 8px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.category-actions a {
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 100px;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* Współdzielone style dla przycisków edycji */
+.edit-btn {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+}
+
+.edit-btn:hover {
+    background: linear-gradient(135deg, #45a049, #388E3C);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+.edit-btn::before {
+    content: '✎';
+    font-size: 1.2em;
+    margin-right: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+/* Współdzielone style dla przycisków usuwania */
+.delete-btn {
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+    box-shadow: 0 2px 10px rgba(255, 68, 68, 0.3);
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #cc0000, #b30000);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+}
+
+.delete-btn::before {
+    content: '🗑';
+    font-size: 1.2em;
+    margin-right: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+/* Efekt ripple dla wszystkich przycisków akcji */
+.action-buttons a::after,
+.category-actions a::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.action-buttons a:focus:not(:active)::after,
+.category-actions a:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+/* Responsywność dla obu typów przycisków */
+@media (max-width: 768px) {
+    .action-buttons,
+    .category-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .action-buttons a,
+    .category-actions a {
+        width: 100%;
+        padding: 10px 20px;
+        justify-content: center;
+    }
+}
+
+/* Stylizacja sekcji produktów */
+.products-section {
+    margin-top: 30px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* Stylizacja tabeli produktów */
 .products-table {
-    width: 100%;                 /* Pełna szerokość kontenera */
-    border-collapse: collapse;    /* Łączenie krawędzi komórek tabeli */
-    margin-top: 20px;            /* Górny margines 20px */
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-/* Style dla komórek i nagłówków tabeli */
 .products-table th,
 .products-table td {
-    padding: 10px;               /* Wewnętrzny odstęp 10px */
-    border: 1px solid #ddd;      /* Szara ramka o grubości 1px */
-    text-align: left;            /* Wyrównanie tekstu do lewej */
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-/* Style dla nagłówków tabeli */
 .products-table th {
-    background-color: #f5f5f5;   /* Jasnoszare tło dla nagłówków */
+    background-color: #f5f5f5;
+    font-weight: bold;
+    text-align: left;
 }
 
-/* Kontener formularza produktu */
+.products-table th:last-child {
+    text-align: center;
+}
+
+.products-table img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Stylizacja formularza produktu */
 .product-form {
-    max-width: 800px;            /* Maksymalna szerokość formularza */
-    margin: 20px auto;           /* Wyśrodkowanie i margines górny/dolny */
-    padding: 20px;               /* Wewnętrzny odstęp 20px */
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-/* Grupa elementów formularza */
-.form-group {
-    margin-bottom: 15px;         /* Dolny margines między grupami */
+.product-form .form-group {
+    margin-bottom: 20px;
 }
 
-/* Style dla etykiet w formularzu */
-.form-group label {
-    display: block;              /* Wyświetlanie jako blok */
-    margin-bottom: 5px;          /* Dolny margines 5px */
+.product-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
 }
 
-/* Style dla pól wprowadzania danych */
-.form-group input[type="text"],
-.form-group input[type="number"],
-.form-group textarea,
-.form-group select {
-    width: 100%;                 /* Pełna szerokość kontenera */
-    padding: 8px;                /* Wewnętrzny odstęp 8px */
-    border: 1px solid #ddd;      /* Szara ramka o grubości 1px */
-    border-radius: 4px;          /* Zaokrąglone rogi */
+.product-form input[type="text"],
+.product-form input[type="number"],
+.product-form input[type="date"],
+.product-form textarea,
+.product-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
-/* Podstawowy styl przycisku */
-.btn {
-    display: inline-block;       /* Wyświetlanie jako element liniowy-blokowy */
-    padding: 8px 15px;           /* Wewnętrzny odstęp */
-    background-color: #007bff;   /* Niebieskie tło */
-    color: white;                /* Biały tekst */
-    text-decoration: none;       /* Brak podkreślenia */
-    border-radius: 4px;          /* Zaokrąglone rogi */
-    border: none;                /* Brak ramki */
-    cursor: pointer;             /* Kursor wskaźnika */
+.product-form textarea {
+    min-height: 150px;
+    resize: vertical;
 }
 
-/* Styl przycisku niebezpiecznych akcji */
-.btn-danger {
-    background-color: #dc3545;   /* Czerwone tło dla przycisków usuwania */
+.product-image-preview {
+    max-width: 200px;
+    margin: 10px 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Styl dla małych przycisków */
-.btn-small {
-    padding: 5px 10px;           /* Mniejszy padding */
-    font-size: 0.9em;            /* Mniejsza czcionka */
+/* Status dostępności */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
 }
+
+.status-available {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.status-unavailable {
+    background-color: #f44336;
+    color: white;
+}
+
+.status-coming-soon {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* Stylizacja uploadu zdjęć */
+.image-upload-container {
+    border: 2px dashed #ddd;
+    padding: 20px;
+    text-align: center;
+    margin: 10px 0;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.image-upload-container:hover {
+    border-color: #3498db;
+    background-color: #f0f4f7;
+}
+
+.image-upload-container input[type="file"] {
+    display: none;
+}
+
+.image-upload-label {
+    cursor: pointer;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.image-upload-preview {
+    max-width: 300px;
+    margin: 15px auto;
+    position: relative;
+}
+
+.image-upload-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.remove-image {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #f44336;
+    color: white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.upload-progress {
+    width: 100%;
+    height: 4px;
+    background: #f0f0f0;
+    margin-top: 10px;
+    border-radius: 2px;
+    overflow: hidden;
+    display: none;
+}
+
+.upload-progress-bar {
+    height: 100%;
+    background: #4CAF50;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+/* Stylizacja przycisków nawigacji */
+.navigation-buttons {
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Stylizacja tabeli produktów */
+.products-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+/* Stylizacja komórki z akcjami w tabeli */
+.products-table td .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    min-width: 160px;
+}
+
+/* Stylizacja przycisków w tabeli produktów */
+.products-table .action-buttons a {
+    padding: 6px 12px;
+    min-width: auto;
+    font-size: 0.85em;
+}
+
+/* Responsywność tabeli produktów */
+@media (max-width: 768px) {
+    .products-table td .action-buttons {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .products-table .action-buttons a {
+        width: 100%;
+    }
+}
+
+/* Stylizacja nagłówka Akcje w tabeli produktów */
+.products-table th:nth-child(8) {  /* 8 kolumna to Akcje */
+    text-align: center;
+}
+
+/* Stylizacja kontenera sklepu */
+.shop-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Siatka produktów */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+/* Karta produktu */
+.product-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+/* Zdjęcie produktu */
+.product-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+/* Informacje o produkcie */
+.product-info {
+    padding: 20px;
+}
+
+.product-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+    color: #2c3e50;
+}
+
+.product-category {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.product-description {
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+/* Cena produktu */
+.product-price {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+/* Przycisk dodawania do koszyka */
+.add-to-cart-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background: linear-gradient(135deg, #45a049, #388E3C);
+    transform: translateY(-2px);
+}
+
+/* Komunikat o braku produktów */
+.no-products {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+    }
+    
+    .product-info {
+        padding: 15px;
+    }
+}
+
+/* Stylizacja koszyka */
+.cart-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.cart-empty {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cart-item {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    align-items: center;
+}
+
+.cart-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.cart-item-details {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-item-details h3 {
+    width: 100%;
+    margin: 0;
+}
+
+.quantity-form {
+    display: inline-flex;
+    align-items: center;
+}
+
+.quantity-form input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.remove-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.remove-btn:hover {
+    background: #c82333;
+}
+
+.cart-summary {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+    text-align: right;
+}
+
+.total {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.quantity-input {
+    width: 60px;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Style dla niedostępnych produktów w koszyku */
+.cart-item.unavailable {
+    opacity: 0.7;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+}
+
+.status-warning {
+    color: #dc3545;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.cart-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #ffeeba;
+}
+
