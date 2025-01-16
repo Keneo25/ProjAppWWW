@@ -53,6 +53,19 @@ if (isset($_POST['remove_from_cart'])) {
     exit();
 }
 
+// Na początku pliku, dodaj obsługę aktualizacji ilości
+if (isset($_POST['update_quantity'])) {
+    $nr = $_POST['item_nr'];
+    $new_quantity = (int)$_POST['new_quantity'];
+    
+    if ($new_quantity > 0) {
+        $_SESSION[$nr . '_2'] = $new_quantity;
+    }
+    
+    header('Location: index.php?id=sklep');
+    exit();
+}
+
 // Funkcja wyświetlania koszyka
 function showCart() {
     if ($_SESSION['count'] == 0) {
@@ -105,7 +118,16 @@ function showCart() {
                 echo '<div class="cart-item-details">';
                 echo '<h3>'.$product['title'].'</h3>';
                 echo '<p class="price">'.number_format($gross_price, 2).' PLN</p>';
-                echo '<p class="quantity">Ilość: '.$quantity.'</p>';
+                
+                // Nowy kod dla formularza zmiany ilości
+                echo '<form method="post" class="quantity-form">';
+                echo '<label>Ilość: ';
+                echo '<input type="number" name="new_quantity" value="'.$quantity.'" min="1" class="quantity-input">';
+                echo '</label>';
+                echo '<input type="hidden" name="item_nr" value="'.$i.'">';
+                echo '<button type="submit" name="update_quantity" class="update-btn">Aktualizuj</button>';
+                echo '</form>';
+                
                 echo '<p class="subtotal">Suma: '.number_format($item_total, 2).' PLN</p>';
                 echo '<form method="post">';
                 echo '<input type="hidden" name="item_nr" value="'.$i.'">';
